@@ -45,8 +45,10 @@ int enter_recovery() {
                 }
         }
         if (lockdownd_enter_recovery(client) != LOCKDOWN_E_SUCCESS) {
+		printf("Failed to enter recovery");
                 return -1; //Failed to enter recovery
         }
+	printf("entered recovery");
         return 0; //Success!
 }
 
