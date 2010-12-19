@@ -35,8 +35,8 @@
 #define BUF_SIZE        0x10000
 
 int enter_recovery() {
-	lockdownd_client_t phone = NULL;
-        idevice_t client = NULL;
+	lockdownd_client_t client = NULL;
+        idevice_t phone = NULL;
         idevice_t ret = IDEVICE_E_UNKNOWN_ERROR;
         ret = idevice_new(&phone, NULL);
         if (ret == IDEVICE_E_SUCCESS) {
