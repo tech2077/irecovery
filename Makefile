@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS_OSX = -lusb -framework CoreFoundation -framework IOKit -lreadline
-CFLAGS_LNX = -lusb -lreadline
+CFLAGS_LNX = -lusb -lreadline -limobiledevice
 CFLAGS_WIN = -lusb -lreadline
 
 all:
