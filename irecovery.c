@@ -24,12 +24,31 @@
 #include <readline/history.h>
 #include <usb.h>
 
+#include <libimobiledevice/libimobiledevice.h>
+#include <libimobiledevice/lockdown.h>
+
 #define VENDOR_ID       0x05AC
 #define NORM_MODE       0x1290
 #define RECV_MODE       0x1281
 #define WTF_MODE        0x1227
 #define DFU_MODE        0x1222
 #define BUF_SIZE        0x10000
+
+int enter_recovery() {
+	lockdown_client_t phone = NULL;
+        idevice_t client = NULL;
+        i_device_t ret = IDEVICE_E_UNKNOWN_ERROR;
+        ret = idevice_new(&phone, NULL);
+        if (ret == IDEVICE_E_SUCCESS) {
+                if (lockdownd_client_new_with_handshake(phone, &client, "ideviceenterrecovery") != LOCKDOWN_E_SUCCESS) {
+                        idevice_free(phone);
+                }
+        }
+        if (lockdownd_enter_recovery(client) != LOCKDOWN_E_SUCCESS) {
+                return -1; //Failed to enter recovery
+        }
+        return 0; //Success!
+}
 
 void irecv_hexdump(unsigned char* buf, unsigned int len) {
 	unsigned int i = 0;
@@ -463,6 +482,7 @@ int irecv_list(struct usb_dev_handle* handle, char* filename) {
 
 void irecv_usage(void) {
 	printf("./irecovery [args]\n");
+	printf("\t-q\t\t\tenter recovery.\n");
 	printf("\t-f <file>\t\tupload file.\n");
 	printf("\t-c <command>\t\tsend a single command.\n");
 	printf("\t-k [payload]\t\tsend usb exploit and payload.\n");
@@ -501,8 +521,11 @@ int main(int argc, char *argv[]) {
 	    	printf("Found iPhone/iPod in Recovery mode\n");
 
 	}
-	
-	if(!strcmp(argv[1], "-f")) {
+
+        if(!strcmp(argv[1], "-q")) {
+		enter_recovery();
+
+	}if(!strcmp(argv[1], "-f")) {
 	    	if(argc == 3) {
                 	irecv_upload(handle, argv[2]);
 
