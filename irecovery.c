@@ -527,7 +527,7 @@ int main(int argc, char *argv[]) {
         if(!strcmp(argv[1], "-q")) {
 		enter_recovery();
 
-	}if(!strcmp(argv[1], "-f")) {
+	} else if(!strcmp(argv[1], "-f")) {
 	    	if(argc == 3) {
                 	irecv_upload(handle, argv[2]);
 
