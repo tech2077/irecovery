@@ -506,6 +506,11 @@ int main(int argc, char *argv[]) {
 		return -1;
 	}
 
+        if(!strcmp(argv[1], "-q")) {
+                enter_recovery();
+
+        } 
+
 	struct usb_dev_handle* handle = irecv_init(RECV_MODE);
 
 	if (handle == NULL) {
@@ -524,10 +529,7 @@ int main(int argc, char *argv[]) {
 
 	}
 
-        if(!strcmp(argv[1], "-q")) {
-		enter_recovery();
-
-	} else if(!strcmp(argv[1], "-f")) {
+	if(!strcmp(argv[1], "-f")) {
 	    	if(argc == 3) {
                 	irecv_upload(handle, argv[2]);
 
