@@ -34,7 +34,7 @@
 #define DFU_MODE        0x1222
 #define BUF_SIZE        0x10000
 
-int enter_recovery(struct usb_dev_handle *handle) {
+int enter_recovery() {
 	lockdownd_client_t client = NULL;
         idevice_t phone = NULL;
         idevice_t ret = IDEVICE_E_UNKNOWN_ERROR;
@@ -49,9 +49,6 @@ int enter_recovery(struct usb_dev_handle *handle) {
                 return -1; //Failed to enter recovery
         }
 	printf("entered recovery");
-        if (((irecv_command(handle, 1, "setenv auto-boot true")) == -1) ||
-	    ((irecv_command(handle, 1, "saveenv")) == -1))
-		printf("Failed to set auto-boot");
 	return 0; //Success!
 }
 
@@ -531,6 +528,10 @@ int main(int argc, char *argv[]) {
 	    	printf("Found iPhone/iPod in Recovery mode\n");
 
 	}
+
+	if (((irecv_command(handle, 1, "setenv auto-boot true")) == -1) ||
+            ((irecv_command(handle, 1, "saveenv")) == -1))
+                printf("Failed to set auto-boot");
 
 	if(!strcmp(argv[1], "-f")) {
 	    	if(argc == 3) {
