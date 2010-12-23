@@ -34,7 +34,7 @@
 #define DFU_MODE        0x1222
 #define BUF_SIZE        0x10000
 
-int enter_recovery() {
+int enter_recovery(struct usb_dev_handle *handle) {
 	lockdownd_client_t client = NULL;
         idevice_t phone = NULL;
         idevice_t ret = IDEVICE_E_UNKNOWN_ERROR;
@@ -49,7 +49,10 @@ int enter_recovery() {
                 return -1; //Failed to enter recovery
         }
 	printf("entered recovery");
-        return 0; //Success!
+        if (((irecv_command(handle, 1, "setenv auto-boot true")) == -1) ||
+	    ((irecv_command(handle, 1, "saveenv")) == -1))
+		printf("Failed to set auto-boot");
+	return 0; //Success!
 }
 
 void irecv_hexdump(unsigned char* buf, unsigned int len) {
